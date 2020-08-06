@@ -1,12 +1,13 @@
 <?php
+
 namespace fGalvao\BaseClientApi;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
@@ -18,11 +19,6 @@ class HttpClient
      * @var Client
      */
     private $client;
-
-    /**
-     * @var array
-     */
-    private $settings;
 
     /**
      * @var Request
@@ -40,46 +36,27 @@ class HttpClient
     public $apiHistory = [];
 
     /**
-     * Constructor.
-     * ##Settings
-     * * BASE_URL (required)
-     * * API_HOST (required)
-     * * API_KEY (required)
-     * * DEV_MODE
+     * HttpClient constructor.
      *
-     * @param array $settings
+     * @param array $clientConfig
      */
-    public function __construct(array $settings)
+    public function __construct(array $clientConfig)
     {
-        $missing = array_diff(['BASE_URL', 'API_HOST', 'API_KEY'], array_keys($settings));
-        if (count($missing)) {
-            throw new InvalidArgumentException(sprintf('Missing required setting: %s', implode(',', $missing)));
+        if (!array_key_exists('timeout', $clientConfig)) {
+            $clientConfig['timeout'] = self::REQUEST_TIMEOUT;
         }
 
-        $this->settings = $settings;
+        if (!array_key_exists('handler', $clientConfig)) {
+            $history = Middleware::history($this->apiHistory);
 
-        $history = Middleware::history($this->apiHistory);
+            $handlerStack = HandlerStack::create();
+            $handlerStack->push($history);
 
-        $handlerStack = HandlerStack::create();
-        $handlerStack->push($history);
+            $clientConfig['handler'] = $handlerStack;
+        }
 
-        $this->client = new Client([
-            'verify'      => !$this->settings['DEV_MODE'] ?? true,
-            'http_errors' => false,
-            'timeout'     => self::REQUEST_TIMEOUT,
-            'handler'     => $handlerStack,
-            // Base URI is used with relative requests
-            'base_uri'    => ltrim($this->settings['BASE_URL'], '/'),
-            'headers'     => [
-//                'Content-Type'    => 'application/json',
-'Accept'          => 'application/json',
-'x-rapidapi-host' => $this->settings['API_HOST'],
-'x-rapidapi-key'  => $this->settings['API_KEY'],
-            ],
-        ]);
-
+        $this->client = new Client($clientConfig);
     }
-
 
     /**
      * @param string $method
@@ -87,7 +64,7 @@ class HttpClient
      * @param array  $options
      *
      * @return ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     protected function call(string $method, string $uri, array $options = [])
     {
