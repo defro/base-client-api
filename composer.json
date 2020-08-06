@@ -1,0 +1,21 @@
+{
+    "name": "ffgalvao/base-client-api",
+    "description": "Base classes form a easy implementation of a client api",
+    "authors": [
+        {
+            "name": "Felippe Ladeira",
+            "email": "felippe@scoolook.com"
+        }
+    ],
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5"
+    },
+	"autoload": {
+    "psr-4": {
+      "fGalvao\\BaseClientApi\\": "src/"
+    }
+  },
+    "minimum-stability": "stable"
+}
