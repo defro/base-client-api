@@ -1,10 +1,10 @@
 {
-    "name": "ffgalvao/base-client-api",
+    "name": "fgalvao/base-client-api",
     "description": "Base classes form a easy implementation of a client api",
     "authors": [
         {
             "name": "Felippe Ladeira",
-            "email": "felippe@scoolook.com"
+            "email": "ffgalvao@gmail.com"
         }
     ],
     "license": "MIT",
