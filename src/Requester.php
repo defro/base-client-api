@@ -1,7 +1,7 @@
 <?php
 namespace fGalvao\BaseClientApi;
 
-use fGalvao\GeoDB\Core\Response as ResourceResponse;
+use fGalvao\BaseClientApi\Response as ResourceResponse;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
