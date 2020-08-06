@@ -102,12 +102,12 @@ abstract class Requester
     }
 
     /**
-     * @param ResponseInterface      $response
-     * @param ResourceInterface|null $hidrateClass
+     * @param ResponseInterface $response
+     * @param string|null       $hidrateClass
      *
      * @return \fGalvao\GeoDB\Core\Response
      */
-    protected function toResourceResponse(ResponseInterface $response, ResourceInterface $hidrateClass = null)
+    protected function toResourceResponse(ResponseInterface $response, string $hidrateClass = null)
     {
         return new ResourceResponse($response, $hidrateClass);
     }

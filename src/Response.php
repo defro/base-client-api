@@ -1,6 +1,8 @@
 <?php
+
 namespace fGalvao\BaseClientApi;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 class Response
@@ -23,17 +25,21 @@ class Response
     /**
      * Response constructor.
      *
-     * @param ResponseInterface      $response
-     * @param ResourceInterface|null $hidrateClass
+     * @param ResponseInterface $response
+     * @param string|null       $hidrateClass
      */
-    public function __construct(ResponseInterface $response, ResourceInterface $hidrateClass = null)
+    public function __construct(ResponseInterface $response, string $hidrateClass = null)
     {
         $this->statusCode   = $response->getStatusCode();
         $this->reasonPhrase = $response->getReasonPhrase();
         $this->status       = ($this->statusCode >= 200 && $this->statusCode < 300);
 
         $this->body = $this->response = $this->decodeBody($response);
-        if ($hidrateClass) {
+        if ($hidrateClass && $this->status) {
+            if (!is_subclass_of($hidrateClass, ResourceInterface::class)) {
+                throw new InvalidArgumentException('$hidrateClass must be a instance of ' . ResponseInterface::class);
+            }
+
             $this->body = $hidrateClass::hydrate($this->response);
         }
     }
