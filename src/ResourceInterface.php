@@ -1,7 +1,9 @@
 <?php
 namespace fGalvao\BaseClientApi;
 
-interface ResourceInterface
+use JsonSerializable;
+
+interface ResourceInterface extends JsonSerializable
 {
     /**
      * @param array $properties

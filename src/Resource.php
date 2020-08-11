@@ -1,6 +1,8 @@
 <?php
 namespace fGalvao\BaseClientApi;
 
+use InvalidArgumentException;
+
 abstract class Resource implements ResourceInterface
 {
     /**
@@ -99,7 +101,7 @@ abstract class Resource implements ResourceInterface
                         get_class($this),
                         $class
                     );
-                    throw new \InvalidArgumentException($error);
+                    throw new InvalidArgumentException($error);
                 }
 
                 $value = (new $class())->hydrate($value);
@@ -136,6 +138,12 @@ abstract class Resource implements ResourceInterface
 
         return null;
     }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
 
     /**
      * @return array
