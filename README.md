@@ -1,2 +1,2 @@
 # base-client-api
-Base classes in PHP form a easy implementation of a client API
+Base classes in PHP for a easy implementation of a client API
