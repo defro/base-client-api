@@ -7,14 +7,14 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use function GuzzleHttp\Psr7\str;
 
-abstract class Requester
+abstract class Requestor
 {
     /**
      * @var HttpClient
      */
     protected $client;
-
-
+    
+    
     /**
      * Program constructor.
      *
@@ -32,7 +32,7 @@ abstract class Requester
      *
      * @return ResponseInterface
      */
-    protected function get(string $uri, array $params = [], array $options = [])
+    protected function getRequest(string $uri, array $params = [], array $options = []): ResponseInterface
     {
         return $this->client->get($uri, $params, $options);
     }
@@ -44,7 +44,7 @@ abstract class Requester
      *
      * @return ResponseInterface
      */
-    protected function post(string $uri, array $params = [], array $options = [])
+    protected function postRequest(string $uri, array $params = [], array $options = []): ResponseInterface
     {
         return $this->client->post($uri, $params, $options);
     }
@@ -56,11 +56,59 @@ abstract class Requester
      *
      * @return ResponseInterface
      */
-    protected function postJson(string $uri, array $params = [], array $options = [])
+    protected function postJsonRequest(string $uri, array $params = [], array $options = []): ResponseInterface
     {
         return $this->client->postJson($uri, $params, $options);
     }
-
+    
+    /**
+     * @param string $uri
+     * @param array  $params
+     * @param array  $options
+     *
+     * @return ResponseInterface
+     */
+    protected function putRequest(string $uri, array $params = [], array $options = []): ResponseInterface
+    {
+        return $this->client->put($uri, $params, $options);
+    }
+    
+    /**
+     * @param string $uri
+     * @param array  $params
+     * @param array  $options
+     *
+     * @return ResponseInterface
+     */
+    protected function putJsonRequest(string $uri, array $params = [], array $options = []): ResponseInterface
+    {
+        return $this->client->putJson($uri, $params, $options);
+    }
+    
+    /**
+     * @param string $uri
+     * @param array  $params
+     * @param array  $options
+     *
+     * @return ResponseInterface
+     */
+    protected function patchRequest(string $uri, array $params = [], array $options = []): ResponseInterface
+    {
+        return $this->client->patch($uri, $params, $options);
+    }
+    
+    /**
+     * @param string $uri
+     * @param array  $params
+     * @param array  $options
+     *
+     * @return ResponseInterface
+     */
+    protected function patchJsonRequest(string $uri, array $params = [], array $options = []): ResponseInterface
+    {
+        return $this->client->patchJson($uri, $params, $options);
+    }
+    
     /**
      * @return array
      */
@@ -68,7 +116,7 @@ abstract class Requester
     {
         return $this->client->apiHistory;
     }
-
+    
     /**
      * @return Request
      */
@@ -88,7 +136,7 @@ abstract class Requester
     /**
      * @return Response
      */
-    protected function lastResponse()
+    public function lastResponse()
     {
         return $this->client->lastResponse;
     }
@@ -96,20 +144,20 @@ abstract class Requester
     /**
      * @return string
      */
-    protected function lastResponseStr()
+    public function lastResponseStr()
     {
         return str($this->lastResponse());
     }
-
+    
     /**
      * @param ResponseInterface $response
-     * @param string|null       $hidrateClass
+     * @param string|null       $hydrateClass
      *
-     * @return \fGalvao\GeoDB\Core\Response
+     * @return ResourceResponse
      */
-    protected function toResourceResponse(ResponseInterface $response, string $hidrateClass = null)
+    protected function toResourceResponse(ResponseInterface $response, string $hydrateClass = null)
     {
-        return new ResourceResponse($response, $hidrateClass);
+        return new ResourceResponse($response, $hydrateClass);
     }
 
     /**
